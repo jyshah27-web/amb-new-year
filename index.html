@@ -111,7 +111,7 @@ body.cap #hint,body.cap #bar,body.cap #apb{display:none!important}
   <g id="flame"><path d="M150 108 C122 84 132 48 150 8 C168 48 178 84 150 108 Z" fill="url(#fl)"/><path d="M150 106 C138 94 142 78 150 62 C158 78 162 94 150 106 Z" fill="#fff3b0" opacity=".9"/></g>
  </svg></div>
  <canvas id="sparks"></canvas>
- <div id="hint">TAP TO LIGHT THE DIYA</div>
+ 
 </div>
 <script>/**
  * @license
@@ -1221,7 +1221,7 @@ function frame(now){
  const dr=$('diya').getBoundingClientRect(),fx=dr.left+dr.width*.5,fy=dr.top+dr.height*(70/230),tipy=dr.top+dr.height*(8/230);
  const g=ease(u/1.9),mx=Math.max(W,H),gs=(.25+1.9*g)*mx;
  const ge=$('glow');ge.style.width=ge.style.height=gs+'px';ge.style.left=(fx-gs/2)+'px';ge.style.top=(fy-gs/2)+'px';ge.style.opacity=u<0?0:(g*(.88+.1*Math.sin(now*11))).toFixed(3);
- $('hint').style.opacity=u<0?(.55+.4*Math.sin(now*3.2)):0;
+ 
  // greeting
  const gr=$('greet');const gi=ease((u-1.3)/.9),go=1-ease((u-2.3)/.6);gr.style.opacity=(gi*go).toFixed(3);$('sign').style.opacity=(ease((u-1.8)/.9)*go).toFixed(3);
  // overlay dissolve
@@ -1276,7 +1276,11 @@ window.__frame=(t)=>frame(t);
 window.__lit=(t)=>{LIT=t};
 if(!CAP){
  let t0=performance.now()/1000;
- const K0=2;const snd=$('snd');const play=()=>{try{snd.playbackRate=1/K0;snd.currentTime=0.7;snd.play().catch(()=>{})}catch(e){}};const light=()=>{if(LIT==null){LIT=performance.now()/1000;play()}};
+ const K0=2;const snd=$('snd');let pend=false;
+ const play=()=>{try{const el=LIT==null?0:(performance.now()/1000-LIT)/K0;if(el>4.5)return;snd.playbackRate=1/K0;snd.currentTime=0.7+el;const p=snd.play();if(p&&p.catch)p.catch(()=>{pend=true})}catch(e){}};
+ const light=()=>{if(LIT==null){LIT=performance.now()/1000;play()}};
+ ['pointerdown','keydown','touchstart'].forEach(ev=>addEventListener(ev,()=>{if(pend&&LIT!=null){pend=false;play()}},{passive:true}));
+ setTimeout(light,1400);
  $('intro').addEventListener('click',light);addEventListener('keydown',light);
  $('bRe').onclick=()=>{LIT=performance.now()/1000;userAng=null;ctl.userSet=false;noteOpen=false;noteShown=false;play()};
  $('bSnd').onclick=()=>{snd.muted=!snd.muted;$('bSnd').textContent=snd.muted?'SOUND OFF':'SOUND ON'};
