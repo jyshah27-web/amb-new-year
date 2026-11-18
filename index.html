@@ -1233,15 +1233,15 @@ function frame(now){
    const r=(1.4+hash(i,5)*3)*dpr,al=(1-k)*(k<.08?k/.08:1);sx.globalAlpha=al*.95;sx.fillStyle=hash(i,6)>.4?'#ffd27a':'#ff9a3a';sx.beginPath();sx.arc(x*dpr,y*dpr,r,0,6.283);sx.fill();}
   sx.globalAlpha=1}
   // notes (white)
-  const S=8.8,nt=$('notes');
-  if(u<2.8||u>12.6){nt.style.visibility='hidden'}else{
+  const P=CAP?{a:7.8,b:11.9,S:8.8}:{a:5.6,b:9.0,S:5.9};const S=P.S,nt=$('notes');
+  if(u<2.8||u>P.b+0.7){nt.style.visibility='hidden'}else{
    nt.style.visibility='visible';
    nt.style.clipPath=`circle(${(ease((u-2.8)/.9)*Math.hypot(W,H)*1.1).toFixed(0)}px at ${fx.toFixed(0)}px ${fy.toFixed(0)}px)`;
-   nt.style.opacity=(1-ease((u-11.9)/.6)).toFixed(3)}
+   nt.style.opacity=(1-ease((u-P.b)/.6)).toFixed(3)}
   const rv2=(id)=>{const e=$(id);if(!e)return;e.style.opacity=1;e.style.transform='none'};
   rv2('n1a',3.9);rv2('n1b',4.3);rv2('n1r',4.9);rv2('n1c',5.1);rv2('n1d',5.6);rv2('n1e',6.3);
-  $('n1').style.opacity=(u<2.8||u>=7.8)?0:1;
-  $('n2').style.opacity=u>=7.8?1:0;
+  $('n1').style.opacity=(u<2.8||u>=P.a)?0:1;
+  $('n2').style.opacity=u>=P.a?1:0;
   rv2('n2a',8.2);rv2('n2b',8.5);rv2('n2c',8.9);rv2('n2r',9.4);rv2('n2d',9.6);rv2('n2e',10.1);
   // 3D reveal
   const T0=3.6+S,rv=u<T0?0:easeO((u-T0)/2.3);
