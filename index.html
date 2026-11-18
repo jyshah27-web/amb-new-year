@@ -1213,7 +1213,7 @@ function layout(){W=innerWidth;H=innerHeight;R.setSize(W,H,false);cam.aspect=W/H
 layout();addEventListener('resize',layout);
 const sc=$('sparks'),sx=sc.getContext('2d');
 function frame(now){
- const K=CAP?1:2;const u=LIT==null?-1:(now-LIT)/K;
+ const K=CAP?1:1.6;const u=LIT==null?-1:(now-LIT)/K;
  const dpr=Math.min(devicePixelRatio||1,2),cw=Math.round(W*dpr),ch=Math.round(H*dpr);if(sc.width!==cw||sc.height!==ch){sc.width=cw;sc.height=ch}
  // diya + glow
  const f=easeO(u/0.55)*(u<0?0:1),fl=1+.05*Math.sin(now*13)+.03*Math.sin(now*27.3+1);
@@ -1276,7 +1276,7 @@ window.__frame=(t)=>frame(t);
 window.__lit=(t)=>{LIT=t};
 if(!CAP){
  let t0=performance.now()/1000;
- const K0=2;const snd=$('snd');let pend=false;
+ const K0=1.6;const snd=$('snd');let pend=false;
  const play=()=>{try{const el=LIT==null?0:(performance.now()/1000-LIT)/K0;if(el>4.5)return;snd.playbackRate=1/K0;snd.currentTime=0.7+el;const p=snd.play();if(p&&p.catch)p.catch(()=>{pend=true})}catch(e){}};
  const light=()=>{if(LIT==null){LIT=performance.now()/1000;play()}};
  ['pointerdown','keydown','touchstart'].forEach(ev=>addEventListener(ev,()=>{if(pend&&LIT!=null){pend=false;play()}},{passive:true}));
